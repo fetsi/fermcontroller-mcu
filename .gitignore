@@ -1,0 +1,10 @@
+#Ignore files & directories related to the editor
+.vscode/
+.code-workspace
+
+#Ignore build directories
+build/
+
+#Ignore object files
+*.o
+

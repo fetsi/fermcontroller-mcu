@@ -1,0 +1,38 @@
+FDUP (Fermcontroller Display Update Protocol)
+
+Display update messages are sent in 10-byte frames:
+
+Byte 1: Always 0xBA. Start byte. Marks the start of a display update frame.
+Byte 2: Display 1 character. Refer to Character Translation Table for possible values.
+Byte 3: Display 1 Decimal Point Activate
+Byte 4: Display 2 character. Refer to Character translation table for possible values.
+Byte 5: Display 2 Decimal Point Activate
+Byte 6: Display 3 character. Refer to Character translation table for possible values.
+Byte 7: Display 3 Decimal Point Activate
+Byte 8: Display 4 character. Refer to Character translation table for possible values.
+Byte 9: Display 4 Decimal Point Activate
+Byte 10: Always 0xBE. End byte. Marks the end of a display update frame.
+
+
+
+
+Decimal Point Activate: This byte should be 0x1 if the decimal point is to be lit, 0x0 otherwise.
+
+
+
+Character Translation Table:
+
+Character to display            Protocol byte
+Empty                             0x00
+'0'                               0x10
+'1'                               0x11
+'2'                               0x12
+'3'                               0x13
+'4'                               0x14
+'5'                               0x15
+'6'                               0x16
+'7'                               0x17
+'8'                               0x18
+'9'                               0x19
+'-'                               0x1A
+'E'                               0x1B
