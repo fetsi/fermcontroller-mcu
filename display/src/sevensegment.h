@@ -27,6 +27,7 @@
 #define CHAR_9      (SEGM_A | SEGM_F | SEGM_B | SEGM_G | SEGM_C | SEGM_D)
 #define CHAR_MINUS  (SEGM_G)
 #define CHAR_E      (SEGM_A | SEGM_F | SEGM_G | SEGM_E | SEGM_D)
+#define CHAR_DEBUG  (SEGM_E | SEGM_B)       //A special pattern for debugging purposes. Displayed if no valid translation exists for a byte.
 
 
 

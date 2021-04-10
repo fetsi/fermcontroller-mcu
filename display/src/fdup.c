@@ -43,7 +43,7 @@ char translate_fdup_7segm(dispcombo_t *displays) {
                 displays->disp_arr[i].character = CHAR_MINUS;
                 break;
             case 0x1B:
-                displays->disp_arr[i].character = CHAR_MINUS;
+                displays->disp_arr[i].character = CHAR_E;
                 break;
             default:
                 displays->disp_arr[i].character = CHAR_E;

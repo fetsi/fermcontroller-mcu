@@ -11,21 +11,23 @@
 #include "spi.h"
 #include "dispcont.h"
 
-#define MAX_FRAMESIZE 8            //Max size of FDUP frame not including start & end bytes
+#define NUMBER_DISPBYTES 8            //Max size of FDUP frame not including start, end & address bytes
 
 
 struct usidriverStatus_t {
 	unsigned char transferOfByteComplete : 1; //!< True when transfer of a byte is completed.
 	unsigned char writeCollision : 1;         //!< True if put attempted during transfer.
-    unsigned char receivingDispUpdate : 1;    //!< True if we have received the FDUP frame start byte but have not yet received the whole frame
+    unsigned char frameStarted : 1;           //!< True if we have received the FDUP frame start byte but have not yet received the whole frame
+    unsigned char receivingDispContents : 1;  //!< True if the current frame is meant for us according to the address byte
     unsigned char bytesReceived;              //!< Used to count the number of bytes we have received out of a FDUP frame. (Bytes recvd since start byte) 
+    unsigned char dispBytesRecvd;             //!< Used to count the number of display content bytes we have received (bytes after address byte, if the message is for us) 
 };
 
 volatile struct usidriverStatus_t spi_status;
 
 
-unsigned char recvBuffer[MAX_FRAMESIZE];
-unsigned char dispContents[MAX_FRAMESIZE];
+unsigned char recvBuffer[NUMBER_DISPBYTES];
+unsigned char dispContents[NUMBER_DISPBYTES];
 
 
 void spi_init_slave(void) {
@@ -40,46 +42,50 @@ void spi_init_slave(void) {
 
     spi_status.transferOfByteComplete = 0;
     spi_status.writeCollision = 0;
-    spi_status.receivingDispUpdate = 0;
+    spi_status.frameStarted = 0;
     spi_status.bytesReceived = 0;
+    spi_status.receivingDispContents = 0;
+    spi_status.dispBytesRecvd = 0;
     memset(recvBuffer, 0, sizeof(recvBuffer));
     memset(dispContents, 0, sizeof(dispContents));
 }
 
 
 ISR(USI_OVF_vect) {
-    //Updates flags, clears counter
+    //Clear counter overflow interrupt flag
     USISR =  (1 << USIOIF);
     spi_status.transferOfByteComplete = 1;
-    unsigned char storedUSIDR = USIDR;
+    unsigned char currentByte = USIDR;
 
-    if(spi_status.receivingDispUpdate) {
-        if(storedUSIDR == 0xBE) {    //TODO: Replace hard-coded value with reference to the FDUP header once that exists
-            if(spi_status.bytesReceived == MAX_FRAMESIZE) {
-                memcpy(dispContents, recvBuffer, MAX_FRAMESIZE); //Copy buffer contents into disp contents only if we have received a complete frame
+    if(!spi_status.frameStarted && currentByte == 0xBA) {
+        //We received the frame start byte
+        spi_status.frameStarted = 1;
+    }
+
+    if(spi_status.frameStarted) {
+        ++spi_status.bytesReceived;
+        if((spi_status.bytesReceived == 2) && (currentByte == MY_ADDRESS) ) {
+            //This frame is for us!
+            spi_status.receivingDispContents = 1;
+            return;
+        } 
+
+        if(spi_status.receivingDispContents && spi_status.dispBytesRecvd < NUMBER_DISPBYTES) {
+            recvBuffer[spi_status.dispBytesRecvd] = currentByte;
+            ++spi_status.dispBytesRecvd;
+        }
+
+        if(currentByte == 0xBE) {    //TODO: Replace hard-coded value with reference to the FDUP header once that exists
+            if(spi_status.dispBytesRecvd == NUMBER_DISPBYTES) {
+                memcpy(dispContents, recvBuffer, NUMBER_DISPBYTES); //Copy buffer contents into disp contents only if we have received the right amount of display bytes
             }
-            memset(recvBuffer, 0, MAX_FRAMESIZE);
-            spi_status.receivingDispUpdate = 0;
+            memset(recvBuffer, 0, sizeof(recvBuffer));
+            spi_status.receivingDispContents = 0;
+            spi_status.frameStarted = 0;
             spi_status.bytesReceived = 0;
-        }
-        else {
-            if(spi_status.bytesReceived < MAX_FRAMESIZE) {
-                recvBuffer[spi_status.bytesReceived] = storedUSIDR;
-                ++spi_status.bytesReceived;
-            }
-            else {
-                memset(recvBuffer, 0, MAX_FRAMESIZE);
-                spi_status.receivingDispUpdate = 0;
-                spi_status.bytesReceived = 0;
-            }
+            spi_status.dispBytesRecvd = 0;
         }
     }
-    else {
-        if(storedUSIDR == 0xBA) { //TODO: Replace hard-coded value with reference to the FDUP header once that exists
-            spi_status.receivingDispUpdate = 1;
-        }
-    }
-
 }
 
 

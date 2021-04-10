@@ -1,6 +1,6 @@
 #Ignore files & directories related to the editor
 .vscode/
-.code-workspace
+*.code-workspace
 
 #Ignore build directories
 build/

@@ -3,6 +3,8 @@
 
 #include "dispcont.h"
 
+#define MY_ADDRESS 0x88
+
 
 
 void spi_init_slave(void);
