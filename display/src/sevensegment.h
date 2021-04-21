@@ -8,10 +8,14 @@
 #define SEGM_B          (1 << 7) 
 #define SEGM_C          (1 << 3)
 #define SEGM_D          (1 << 1)
-#define SEGM_E          (1 << 4)
+#define SEGM_E          (1 << 0)
 #define SEGM_F          (1 << 6)
-#define SEGM_G          (1 << 0)
+#define SEGM_G          (1 << 4)
 #define DECIMAL_POINT   (1 << 2)
+
+
+
+
 
 
 /*Macros that define combinations of segments as displayable characters*/
@@ -25,8 +29,24 @@
 #define CHAR_7      (SEGM_A | SEGM_B | SEGM_C)
 #define CHAR_8      (SEGM_A | SEGM_B | SEGM_C | SEGM_D | SEGM_E | SEGM_F | SEGM_G)
 #define CHAR_9      (SEGM_A | SEGM_F | SEGM_B | SEGM_G | SEGM_C | SEGM_D)
-#define CHAR_MINUS  (SEGM_G)
+#define CHAR_A      (SEGM_E | SEGM_F | SEGM_A | SEGM_B | SEGM_C | SEGM_G)
+#define CHAR_C      (SEGM_A | SEGM_F | SEGM_E | SEGM_D)
 #define CHAR_E      (SEGM_A | SEGM_F | SEGM_G | SEGM_E | SEGM_D)
+#define CHAR_F      (SEGM_E | SEGM_F | SEGM_A | SEGM_G)
+#define CHAR_H      (SEGM_F | SEGM_B | SEGM_G | SEGM_E | SEGM_C)
+#define CHAR_I      CHAR_1
+#define CHAR_J      (SEGM_B | SEGM_C | SEGM_D | SEGM_E)
+#define CHAR_L      (SEGM_F | SEGM_E | SEGM_D)
+#define CHAR_O      CHAR_0
+#define CHAR_P      (SEGM_E | SEGM_F | SEGM_A | SEGM_B | SEGM_G)
+#define CHAR_S      CHAR_5
+#define CHAR_U      (SEGM_F | SEGM_E | SEGM_D | SEGM_C | SEGM_B)
+#define CHAR_MINUS  (SEGM_G)
+
+
+
+
+
 #define CHAR_DEBUG  (SEGM_E | SEGM_B)       //A special pattern for debugging purposes. Displayed if no valid translation exists for a byte.
 
 

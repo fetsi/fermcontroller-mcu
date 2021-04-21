@@ -40,13 +40,46 @@ char translate_fdup_7segm(dispcombo_t *displays) {
                 displays->disp_arr[i].character = CHAR_9;
                 break;
             case 0x1A:
-                displays->disp_arr[i].character = CHAR_MINUS;
+                displays->disp_arr[i].character = CHAR_A;
                 break;
             case 0x1B:
+                displays->disp_arr[i].character = CHAR_C;
+                break;
+            case 0x1C:
                 displays->disp_arr[i].character = CHAR_E;
+                break; 
+            case 0x1D:
+                displays->disp_arr[i].character = CHAR_F;
+                break;
+            case 0x1E:
+                displays->disp_arr[i].character = CHAR_H;
+                break;
+            case 0x1F:
+                displays->disp_arr[i].character = CHAR_I;
+                break;
+            case 0x20:
+                displays->disp_arr[i].character = CHAR_J;
+                break;
+            case 0x21:
+                displays->disp_arr[i].character = CHAR_L;
+                break;
+            case 0x22:
+                displays->disp_arr[i].character = CHAR_O;
+                break;
+            case 0x23:
+                displays->disp_arr[i].character = CHAR_P;
+                break;
+            case 0x24:
+                displays->disp_arr[i].character = CHAR_S;
+                break;
+            case 0x25:
+                displays->disp_arr[i].character = CHAR_U;
+                break;
+            case 0x26:
+                displays->disp_arr[i].character = CHAR_MINUS;
                 break;
             default:
-                displays->disp_arr[i].character = CHAR_E;
+                displays->disp_arr[i].character = CHAR_DEBUG;
                 break;
         }
         if(displays->disp_arr[i].dp) {

@@ -13,10 +13,10 @@
 
 
 unsigned char DISPMUX[4] = {
+    0b00001000,
     0b00010000,
     0b00100000,
-    0b01000000,
-    0b00001000
+    0b01000000
 };
 
 
@@ -36,13 +36,15 @@ int main(void) {
     clock_setup();
     spi_init_slave();
     DDRA = 0b11111111;
-    DDRB = 0b11110000;
+    DDRB = 0b01111000;
+
 
     PORTA = 0;
     PORTB = 0;
+    
     unsigned char counter = 0;
 
-    
+ 
     dispcombo_t contents;
     memset(&contents, 0, sizeof(contents));
 
@@ -52,13 +54,12 @@ int main(void) {
         translate_fdup_7segm(&contents);
 
         PORTA = contents.disp_arr[counter].character;
-        //PORTA = CHAR_E;
         PORTB = DISPMUX[counter];
         if(counter++  == (NUM_DISPLAYS - 1))
             counter = 0;
         _delay_ms(2);
     }
-    
+
     return 0;
     
 
