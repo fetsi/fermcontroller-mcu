@@ -53,8 +53,12 @@ int main(void) {
         spi_get_disp_cont(&contents);
         translate_fdup_7segm(&contents);
 
-        PORTA = contents.disp_arr[counter].character;
+        PORTA = 0;
+        _delay_ms(1);
         PORTB = DISPMUX[counter];
+        _delay_ms(2);
+        PORTA = contents.disp_arr[counter].character;
+        
         if(counter++  == (NUM_DISPLAYS - 1))
             counter = 0;
         _delay_ms(2);
